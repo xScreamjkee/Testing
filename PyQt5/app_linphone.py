@@ -12,7 +12,7 @@ class MainUI(QtWidgets.QDialog):
     def __init__(self):
         super(MainUI, self).__init__()
         uic.loadUi('design.ui', self) #init desing form
-        
+        self.CallButton.setText("Сall")
         self.CallButton.clicked.connect(self.press_button)
 
 
@@ -35,12 +35,28 @@ class MainUI(QtWidgets.QDialog):
                 time.sleep(1)
                 os.system('wmctrl -a {0} -b toggle,fullscreen'.format(vwindow))
                 break
-
-
+    
+    
+    def ping(self):
+        while True:
+            hostname = "8.8.8.8"
+            response = os.system("ping -c 1 " + hostname)
+            if response == 0:
+                print (hostname, 'is up!')
+                self.CallButton.setEnabled(True)
+                self.CallButton.setText("Call")
+            else:
+                print (hostname, 'is down!')
+                self.CallButton.setEnabled(False)
+                self.CallButton.setText("Sorry, now the terminal is down")
+    
+    
     def press_button(self):
         thread_call = threading.Thread(target=self.run_linphone, name="call")
         thread_screen = threading.Thread(target=self.check_video, name="screen")
+        thread_ping = threading.Thread(target=self.ping, name="ping")
         thread_call.start()
+        thread_ping.start()
         time.sleep(2)
         thread_screen.start()
 
