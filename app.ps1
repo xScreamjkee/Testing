@@ -21,10 +21,8 @@ $COMMIT_MSG #="1f6398a60f7500eb4b9a4c59d4f8032727996db4"
 #}
 
 
-git fetch
-$base=(git rev-parse HEAD)
-$new=(git rev-parse @{u})
-if ($base == $new)
+
+if (git status --porcelain)
 {
 	echo "No changes"
 }
